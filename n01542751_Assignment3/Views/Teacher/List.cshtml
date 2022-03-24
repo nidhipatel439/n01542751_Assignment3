@@ -14,7 +14,7 @@
     foreach(n01542751_Assignment3.Models.Teacher Teacher in Model)
             {
                 <div>
-                    <p>@Teacher.TeacherFName @Teacher.TeacherLName </p>
+                    <a href="/Teacher/Show/@Teacher.TeacherId">@Teacher.TeacherFName @Teacher.TeacherLName </a>
                 </div>
             }
 }
