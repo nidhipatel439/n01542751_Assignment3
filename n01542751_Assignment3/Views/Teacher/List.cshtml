@@ -1,0 +1,21 @@
+﻿@model List<n01542751_Assignment3.Models.Teacher>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<h1>Teacher List</h1>
+
+<h2>There are total @Model.Count() teachers.</h2>
+
+<div>
+
+@{ 
+    foreach(n01542751_Assignment3.Models.Teacher Teacher in Model)
+            {
+                <div>
+                    <p>@Teacher.TeacherFName @Teacher.TeacherLName </p>
+                </div>
+            }
+}
+</div>

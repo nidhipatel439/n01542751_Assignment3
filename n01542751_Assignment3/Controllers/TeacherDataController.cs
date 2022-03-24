@@ -1,43 +1,117 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using n01542751_Assignment3.Models;
-using MySql.Data.MySqlClient;
 
 namespace n01542751_Assignment3.Controllers
 {
     public class TeacherDataController : ApiController
     {
+        //allows to access our database
         private SchoolDbContext School = new SchoolDbContext();
 
+        ///<summary>
+        /// Return the list of Teachers
+        ///</summary>
+        ///<example>Get api/TeacherData/ListTeachers</example>
+        ///<return>
+        ///A list of Teacher object (including id, firstname, lastname, employeenumber, hiredate, salary)
+        ///</return>
+        
         [HttpGet]
-        public IEnumerable<string> ListTeacher()
+        public List<Teacher> ListTeachers()
         {
+            //create connection
             MySqlConnection Conn = School.AccessDatabase();
 
+            //open connection
             Conn.Open();
 
+            //establish a new command
             MySqlCommand cmd = Conn.CreateCommand();
 
-            cmd.CommandText = "Select * from teachers";
+            //Sql query
+            cmd.CommandText = "select * from teachers";
 
-            MySqlDataReader ResultSet = cmd.ExecuteReader();
+            //gather result of query into a variable
+            MySqlDataReader SetResult = cmd.ExecuteReader();
 
-            List<String> TeacherNames = new List<string> { };
+            //create an empty list of teachers
+            List<Teacher> Teachers = new List<Teacher> { };
 
-            while (ResultSet.Read())
+            //loop for the result
+            while (SetResult.Read())
             {
-                string teacherName = ResultSet["teacherfname"] + " " + ResultSet["teacherlname"];
-                TeacherNames.Add(teacherName);
+                Teacher NewTeacher = new Teacher();
+                NewTeacher.TeacherId = Convert.ToInt32(SetResult["teacherid"]);
+                NewTeacher.TeacherFName = SetResult["teacherfname"].ToString();
+                NewTeacher.TeacherLName = SetResult["teacherlname"].ToString();
+                NewTeacher.EmployeeNumber = SetResult["employeenumber"].ToString();
+                NewTeacher.HireDate = SetResult["hiredate"].ToString();
+                NewTeacher.Salary = Convert.ToDouble(SetResult["salary"]);
+
+                Teachers.Add(NewTeacher);
             }
 
+            //close connection
             Conn.Close();
 
-            return TeacherNames;
-
+            return Teachers;
         }
+
+        /// <summary>
+        /// return a teacher information which match the teacher id
+        /// </summary>
+        /// <param name="teacherid">teacher's id number</param>
+        /// <returns>
+        /// return a teacher object (including id, firstname, lastname, employeenumber, hiredate, salary)
+        /// </returns>
+
+        [HttpGet]
+        [Route("api/TeacherData/FindTeacher/{teacherid}")]
+
+        public Teacher FindTeacher(int teacherid)
+        {
+            //create connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            //open connection
+            Conn.Open();
+
+            //establish a new command
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //sql query
+            cmd.CommandText = "select * from teachers where teacherid = " + teacherid;
+
+            //gather result of query into a variable
+            MySqlDataReader SetResult = cmd.ExecuteReader();
+
+            
+            Teacher SelectedTeacher = new Teacher();
+
+            //loop for the result
+            while(SetResult.Read())
+            {
+                SelectedTeacher.TeacherId = Convert.ToInt32(SetResult["teacherid"]);
+                SelectedTeacher.TeacherFName = SetResult["teacherfname"].ToString();
+                SelectedTeacher.TeacherLName = SetResult["teacherlname"].ToString();
+                SelectedTeacher.EmployeeNumber = SetResult["employeenumber"].ToString();
+                SelectedTeacher.HireDate = SetResult["hiredate"].ToString();
+                SelectedTeacher.Salary = Convert.ToDouble(SetResult["salary"]);
+
+            }
+
+            //close the connection
+            Conn.Close();
+
+            //return the final list of teacher information
+            return SelectedTeacher;
+        }
+
     }
 }
