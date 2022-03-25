@@ -34,10 +34,10 @@ namespace n01542751_Assignment3.Controllers
         {
             TeacherDataController controller = new TeacherDataController();
 
-            Teacher SelectedTeacher = controller.FindTeacher(id);
+            List<Teacher> Teachers = controller.FindTeacher(id);
 
             //routes the single teacher information to Show.cshtml
-            return View(SelectedTeacher);
+            return View(Teachers);
         }
     }
 }

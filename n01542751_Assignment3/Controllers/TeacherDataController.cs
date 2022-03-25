@@ -74,7 +74,7 @@ namespace n01542751_Assignment3.Controllers
         [HttpGet]
         [Route("api/TeacherData/FindTeacher/{teacherid}")]
 
-        public Teacher FindTeacher(int teacherid)
+        public List<Teacher> FindTeacher(int teacherid)
         {
             //create connection
             MySqlConnection Conn = School.AccessDatabase();
@@ -86,31 +86,35 @@ namespace n01542751_Assignment3.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //sql query
-            cmd.CommandText = "select * from teachers where teacherid = " + teacherid;
+            cmd.CommandText = "select teachers.*, classes.classname from teachers join classes on teachers.teacherid = classes.teacherid where teachers.teacherid = " + teacherid;
 
             //gather result of query into a variable
             MySqlDataReader SetResult = cmd.ExecuteReader();
 
             
-            Teacher SelectedTeacher = new Teacher();
+            List<Teacher> Teachers = new List<Teacher> { };
 
             //loop for the result
             while(SetResult.Read())
             {
+                Teacher SelectedTeacher = new Teacher();
+
                 SelectedTeacher.TeacherId = Convert.ToInt32(SetResult["teacherid"]);
                 SelectedTeacher.TeacherFName = SetResult["teacherfname"].ToString();
                 SelectedTeacher.TeacherLName = SetResult["teacherlname"].ToString();
                 SelectedTeacher.EmployeeNumber = SetResult["employeenumber"].ToString();
                 SelectedTeacher.HireDate = SetResult["hiredate"].ToString();
                 SelectedTeacher.Salary = Convert.ToDouble(SetResult["salary"]);
+                SelectedTeacher.ClassName = SetResult["classname"].ToString();
 
+                Teachers.Add(SelectedTeacher);
             }
 
             //close the connection
             Conn.Close();
 
             //return the final list of teacher information
-            return SelectedTeacher;
+            return Teachers;
         }
 
     }

@@ -14,5 +14,7 @@ namespace n01542751_Assignment3.Models
         public string HireDate { get; set; }
         public double Salary { get; set; }
 
+        public string ClassName { get; set; }
+
     }
 }

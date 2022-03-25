@@ -1,25 +1,38 @@
-﻿@model n01542751_Assignment3.Models.Teacher
+﻿@model List<n01542751_Assignment3.Models.Teacher>
 @{
     ViewBag.Title = "Show";
 }
 
-<h2>Teacher's Information</h2>
+<h2>The @Model.Count() course taught by a teacher.</h2>
+<div>
+    @{
+        foreach (n01542751_Assignment3.Models.Teacher Teacher in Model)
+        {
 
-<div>
-    Teacher Id: @Model.TeacherId
-</div>
-<div>
-    First Name: @Model.TeacherFName
-</div>
-<div>
-    Last Name: @Model.TeacherLName
-</div>
-<div>
-    Employee Number: @Model.EmployeeNumber
-</div>
-<div>
-    Hire Date: @Model.HireDate 
-</div>
-<div>
-    Salary: @Model.Salary
+            <div>
+                Teacher Id: @Teacher.TeacherId
+            </div>
+            <div>
+                First Name: @Teacher.TeacherFName
+            </div>
+            <div>
+                Last Name: @Teacher.TeacherLName
+            </div>
+            <div>
+                Employee Number: @Teacher.EmployeeNumber
+            </div>
+            <div>
+                Hire Date: @Teacher.HireDate
+            </div>
+            <div>
+                Salary: @Teacher.Salary
+            </div>
+            <div>
+                Class Name: @Teacher.ClassName
+            </div>
+            <br/>
+            <br/>
+            <br/>
+        } 
+    }
 </div>
