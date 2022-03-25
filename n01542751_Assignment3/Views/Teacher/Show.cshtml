@@ -1,35 +1,37 @@
-﻿@model List<n01542751_Assignment3.Models.Teacher>
+﻿@model n01542751_Assignment3.Models.TeacherCourse
 @{
     ViewBag.Title = "Show";
 }
 
-<h2>The @Model.Count() course taught by a teacher.</h2>
+
+<h2>Teacher Information</h2>
+<div>
+    Teacher Id: @Model.Teacher.TeacherId
+</div>
+<div>
+    First Name: @Model.Teacher.TeacherFName
+</div>
+<div>
+    Last Name: @Model.Teacher.TeacherLName
+</div>
+<div>
+    Employee Number: @Model.Teacher.EmployeeNumber
+</div>
+<div>
+    HireDate: @Model.Teacher.HireDate
+</div>
+<div>
+    Salary: @Model.Teacher.Salary
+</div>
+<h3>@Model.Teacher.TeacherFName teaches @Model.Courses.Count() course(s).</h3>
 <div>
     @{
-        foreach (n01542751_Assignment3.Models.Teacher Teacher in Model)
+        foreach (n01542751_Assignment3.Models.Course Course in Model.Courses)
         {
+            
             <div>
-                Teacher Id: @Teacher.TeacherId
+                Class Name: @Course.ClassName
             </div>
-            <div>
-                First Name: @Teacher.TeacherFName
-            </div>
-            <div>
-                Last Name: @Teacher.TeacherLName
-            </div>
-            <div>
-                Employee Number: @Teacher.EmployeeNumber
-            </div>
-            <div>
-                Hire Date: @Teacher.HireDate
-            </div>
-            <div>
-                Salary: @Teacher.Salary
-            </div>
-            <div>
-                Class Name: @Teacher.ClassName
-            </div>
-            <br/>
             <br/>
         } 
     }

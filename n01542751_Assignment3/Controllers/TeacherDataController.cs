@@ -68,13 +68,13 @@ namespace n01542751_Assignment3.Controllers
         /// </summary>
         /// <param name="teacherid">teacher's id number</param>
         /// <returns>
-        /// return a list of teacher object (including id, firstname, lastname, employeenumber, hiredate, salary,course name)
+        /// return a teacher information (including id, firstname, lastname, employeenumber, hiredate, salary) as weel as teacher's course list 
         /// </returns>
 
         [HttpGet]
         [Route("api/TeacherData/FindTeacher/{teacherid}")]
 
-        public List<Teacher> FindTeacher(int teacherid)
+        public TeacherCourse FindTeacher(int teacherid)
         {
             //create connection
             MySqlConnection Conn = School.AccessDatabase();
@@ -86,35 +86,67 @@ namespace n01542751_Assignment3.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //sql query
-            cmd.CommandText = "select teachers.*, classes.classname from teachers left join classes on teachers.teacherid = classes.teacherid where teachers.teacherid = " + teacherid;
+            // cmd.CommandText = "select teachers.*, classes.classname from teachers left join classes on teachers.teacherid = classes.teacherid where teachers.teacherid = " + teacherid;
+
+            // find teacher 
+            cmd.CommandText = "SELECT * FROM teachers WHERE teacherid = " + teacherid;
 
             //gather result of query into a variable
-            MySqlDataReader SetResult = cmd.ExecuteReader();
+            MySqlDataReader TeacherResult= cmd.ExecuteReader();
 
-            //create an empty list of teacher
-            List<Teacher> Teachers = new List<Teacher> { };
+            //create a teacher instance
+            Teacher SelectedTeacher= new Teacher();
+
 
             //loop for the result
-            while(SetResult.Read())
+            while(TeacherResult.Read())
             {
-                Teacher SelectedTeacher = new Teacher();
 
-                SelectedTeacher.TeacherId = Convert.ToInt32(SetResult["teacherid"]);
-                SelectedTeacher.TeacherFName = SetResult["teacherfname"].ToString();
-                SelectedTeacher.TeacherLName = SetResult["teacherlname"].ToString();
-                SelectedTeacher.EmployeeNumber = SetResult["employeenumber"].ToString();
-                SelectedTeacher.HireDate = SetResult["hiredate"].ToString();
-                SelectedTeacher.Salary = Convert.ToDouble(SetResult["salary"]);
-                SelectedTeacher.ClassName = SetResult["classname"].ToString();
+                SelectedTeacher.TeacherId = Convert.ToInt32(TeacherResult["teacherid"]);
+                SelectedTeacher.TeacherFName = TeacherResult["teacherfname"].ToString();
+                SelectedTeacher.TeacherLName = TeacherResult["teacherlname"].ToString();
+                SelectedTeacher.EmployeeNumber = TeacherResult["employeenumber"].ToString();
+                SelectedTeacher.HireDate = TeacherResult["hiredate"].ToString();
+                SelectedTeacher.Salary = Convert.ToDouble(TeacherResult["salary"]);
 
-                Teachers.Add(SelectedTeacher);
             }
+
+            // close sql reader
+            TeacherResult.Close();
+
+            // establish a new command
+            // MySqlCommand cmd2 = Conn.CreateCommand();
+
+            // find course for the teacher
+            cmd.CommandText = "SELECT * FROM classes WHERE teacherid =" + teacherid;
+
+            //gather result of query into a variable
+            MySqlDataReader ClassResult = cmd.ExecuteReader();
+
+            // create a list of classes
+            List<Course> ClassList = new List<Course> { };
+
+            //loop for the result
+            while (ClassResult.Read())
+            {
+                Course NewCourse = new Course();
+                NewCourse.ClassName = ClassResult["classname"].ToString();
+                ClassList.Add(NewCourse);
+            }
+
+            // close sql reader
+            ClassResult.Close();
 
             //close the connection
             Conn.Close();
 
+            //combine a teacher and a couse information
+            TeacherCourse TC = new TeacherCourse();
+            TC.Teacher = SelectedTeacher;
+            TC.Courses = ClassList;
+
             //return the final list of teacher information
-            return Teachers;
+            return TC;
         }
 
     }

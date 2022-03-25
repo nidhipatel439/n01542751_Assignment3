@@ -9,11 +9,11 @@ namespace n01542751_Assignment3.Controllers
 {
     public class TeacherController : Controller
     {
-        // GET: Teacher
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //// GET: Teacher
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
 
         // GET: Teacher/List
         //showing a page of all teacher information
@@ -34,10 +34,10 @@ namespace n01542751_Assignment3.Controllers
         {
             TeacherDataController controller = new TeacherDataController();
 
-            List<Teacher> Teachers = controller.FindTeacher(id);
+            TeacherCourse TC = controller.FindTeacher(id);
 
             //routes the single teacher information to Show.cshtml
-            return View(Teachers);
+            return View(TC);
         }
     }
 }
