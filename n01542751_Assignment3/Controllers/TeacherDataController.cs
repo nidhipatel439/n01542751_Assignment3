@@ -35,7 +35,7 @@ namespace n01542751_Assignment3.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //Sql query
-            cmd.CommandText = "select * from teachers";
+            cmd.CommandText = "SELECT * FROM teachers";
 
             //gather result of query into a variable
             MySqlDataReader SetResult = cmd.ExecuteReader();
@@ -89,7 +89,9 @@ namespace n01542751_Assignment3.Controllers
             // cmd.CommandText = "select teachers.*, classes.classname from teachers left join classes on teachers.teacherid = classes.teacherid where teachers.teacherid = " + teacherid;
 
             // find teacher 
-            cmd.CommandText = "SELECT * FROM teachers WHERE teacherid = " + teacherid;
+            cmd.CommandText = "SELECT * FROM teachers WHERE teacherid = @teacherid";
+            cmd.Parameters.AddWithValue("@teacherid", teacherid);
+            cmd.Prepare();
 
             //gather result of query into a variable
             MySqlDataReader TeacherResult= cmd.ExecuteReader();
@@ -118,7 +120,9 @@ namespace n01542751_Assignment3.Controllers
             // MySqlCommand cmd2 = Conn.CreateCommand();
 
             // find course for the teacher
-            cmd.CommandText = "SELECT * FROM classes WHERE teacherid =" + teacherid;
+            cmd.CommandText = "SELECT * FROM classes WHERE teacherid = @teacherid";
+            cmd.Parameters.AddWithValue("@teacherid", "teacherid");
+            cmd.Prepare();
 
             //gather result of query into a variable
             MySqlDataReader ClassResult = cmd.ExecuteReader();
