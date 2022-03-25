@@ -68,7 +68,7 @@ namespace n01542751_Assignment3.Controllers
         /// </summary>
         /// <param name="teacherid">teacher's id number</param>
         /// <returns>
-        /// return a teacher object (including id, firstname, lastname, employeenumber, hiredate, salary)
+        /// return a list of teacher object (including id, firstname, lastname, employeenumber, hiredate, salary,course name)
         /// </returns>
 
         [HttpGet]
@@ -86,12 +86,12 @@ namespace n01542751_Assignment3.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //sql query
-            cmd.CommandText = "select teachers.*, classes.classname from teachers join classes on teachers.teacherid = classes.teacherid where teachers.teacherid = " + teacherid;
+            cmd.CommandText = "select teachers.*, classes.classname from teachers left join classes on teachers.teacherid = classes.teacherid where teachers.teacherid = " + teacherid;
 
             //gather result of query into a variable
             MySqlDataReader SetResult = cmd.ExecuteReader();
 
-            
+            //create an empty list of teacher
             List<Teacher> Teachers = new List<Teacher> { };
 
             //loop for the result
