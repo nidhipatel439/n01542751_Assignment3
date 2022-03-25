@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using n01542751_Assignment3.Models;
+using System.Diagnostics;
 
 namespace n01542751_Assignment3.Controllers
 {
@@ -17,12 +18,14 @@ namespace n01542751_Assignment3.Controllers
 
         // GET: Teacher/List
         //showing a page of all teacher information
-        public ActionResult List()
+        [Route("/Teacher/List/{SearchKey}")]
+        public ActionResult List(string SearchKey)
         {
+            Debug.WriteLine(SearchKey);
             //connect a data access layer
             TeacherDataController controller = new TeacherDataController();
 
-            List<Teacher> Teachers = controller.ListTeachers();
+            List<Teacher> Teachers = controller.ListTeachers(SearchKey);
 
             return View(Teachers);
         }

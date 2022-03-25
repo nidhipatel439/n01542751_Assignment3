@@ -17,13 +17,18 @@ namespace n01542751_Assignment3.Controllers
         ///<summary>
         /// Return the list of Teachers
         ///</summary>
-        ///<example>Get api/TeacherData/ListTeachers</example>
+        ///<param name="SearchKey">searchkey (optional) of teacher first name or teacher last name</param>
+        ///<example>GET api/TeacherData/ListTeachers</example>
+        ///search teacher for their first name or last name
+        ///<example>GET api/TeacherData/Listteachers/linda</example>
+        ///<example>GET api/TeacherData/Listteachers/chan</example>
         ///<return>
         ///A list of Teacher object (including id, firstname, lastname, employeenumber, hiredate, salary)
         ///</return>
-        
+
         [HttpGet]
-        public List<Teacher> ListTeachers()
+        [Route("api/TeacherData/ListTeachers/{SearchKey?}")]
+        public List<Teacher> ListTeachers(string SearchKey = null)
         {
             //create connection
             MySqlConnection Conn = School.AccessDatabase();
@@ -35,7 +40,15 @@ namespace n01542751_Assignment3.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //Sql query
-            cmd.CommandText = "SELECT * FROM teachers";
+            string Query = "SELECT * FROM teachers";
+
+            if(SearchKey != null)
+            {
+                Query = Query + " WHERE LOWER(teacherfname) = LOWER(@searchkey) OR LOWER(teacherlname) = LOWER(@searchkey)";
+                cmd.Parameters.AddWithValue("@searchkey", SearchKey);
+                cmd.Prepare();
+            }
+            cmd.CommandText = Query;
 
             //gather result of query into a variable
             MySqlDataReader SetResult = cmd.ExecuteReader();
@@ -121,8 +134,7 @@ namespace n01542751_Assignment3.Controllers
 
             // find course for the teacher
             cmd.CommandText = "SELECT * FROM classes WHERE teacherid = @teacherid";
-            cmd.Parameters.AddWithValue("@teacherid", "teacherid");
-            cmd.Prepare();
+            
 
             //gather result of query into a variable
             MySqlDataReader ClassResult = cmd.ExecuteReader();

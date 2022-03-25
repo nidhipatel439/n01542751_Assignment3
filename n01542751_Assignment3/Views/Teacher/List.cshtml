@@ -6,8 +6,14 @@
 
 <h1>Teacher List</h1>
 
-<h2>There are total @Model.Count() teachers.</h2>
+<h2>There are total @Model.Count() teacher(s) in the school.</h2>
+<div>
+    <form action="/Teacher/List" method="GET">
+        <input type="text" name="SearchKey" placeholder="Type a name here" />
+        <input type="submit" value="Search" />
+    </form>
 
+</div>
 <div>
 
 @{ 
